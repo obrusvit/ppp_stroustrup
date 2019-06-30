@@ -1,0 +1,15 @@
+Welcome to DARIA Computing.
+Enter expression.
+> =4
+> =50
+> =10
+> =8
+> =1
+> =-2
+> =-6
+> =1
+> =4
+> =5
+> =20
+> =21
+> 
