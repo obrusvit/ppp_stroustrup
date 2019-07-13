@@ -1,7 +1,7 @@
 #include "std_lib_facilities.h"
-#include "support_code/Simple_window.h"
-#include "support_code/Window.h"
-#include "support_code/Graph.h"
+#include "Simple_window.h"
+#include "Window.h"
+#include "Graph.h"
 
 
 int main(){
