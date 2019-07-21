@@ -375,6 +375,62 @@ private:
 	Text fn;
 };
 
-}
+/* MINE ADDITIONS */
+
+/**
+ * Part of an ellipse
+ */
+struct Arc : Shape {
+    /**
+     * Params: center point, width, height of an ellipse,
+     * start of an Arc in deg, size of an Arc in deg.
+     * aa_end must be bigger than aa_start.
+     */
+    Arc(Point p, int ww, int hh, double aa_start, double aa_end)
+        :w{ww}, h{hh}, a_start{aa_start}, a_end{aa_end}
+    {
+        add(Point{p.x - ww, p.y - hh});
+    }
+    void draw_lines() const;
+
+private:
+    int w;
+    int h;
+    double a_start;
+    double a_end;
+};
+
+struct Box : Shape {
+	Box(Point xy, int ww, int hh, int rr) :w{ ww }, h{ hh }, r{ rr }
+	{
+		if (h<=0 || w<=0) error("Bad box: non-positive side");
+        check_radius_valid();
+		add(xy);
+	}
+	Box(Point x, Point y, int rr) :w{ y.x - x.x }, h{ y.y - x.y }, r { rr }
+	{
+		if (h<=0 || w<=0) error("Bad box: first point is not top left");
+        check_radius_valid();
+		add(x);
+	}
+	void draw_lines() const;
+    void check_radius_valid() const;
+
+private:
+    int w;
+    int h;
+    int r; // radius of rounded box
+
+};
+
+struct Immobile_Circle : Circle {
+    using Circle::Circle;
+private:
+    void move(int, int) override {
+        return;
+    }
+};
+
+} // namespace Graph_lib
 #endif
 

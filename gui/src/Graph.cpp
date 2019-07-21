@@ -357,4 +357,65 @@ void Image::draw_lines() const
 		p->draw(point(0).x,point(0).y);
 }
 
-} // Graph
+/* MINE ADDITIONS */
+
+void Arc::draw_lines() const{
+
+	if (color().visibility()) {
+		fl_color(color().as_int());
+		fl_arc(point(0).x,point(0).y,w+w,h+h,a_start,a_end);
+	}
+}
+
+void Box::check_radius_valid() const{
+    if(r < 0) error("Bad box: radius of rounded corner non-positive");
+    if(w >= h && r > h/2) error("Bad box: radius too large");
+    if(w < h && r > w/2) error("Bad box: radius too large");
+}
+
+void Box::draw_lines() const{
+    int vert_line_sz = h - 2*r;
+    int horz_line_sz = w - 2*r;
+
+	if (fill_color().visibility()) {	// fill
+		fl_color(fill_color().as_int());
+
+		//fl_rectf(point(0).x,point(0).y,w,h);
+        //horizontal lines
+        fl_rectf(point(0).x+r, point(0).y, horz_line_sz, h); 
+        fl_rectf(point(0).x, point(0).y+r, w, vert_line_sz); 
+
+        //vertical lines
+        fl_line(point(0).x, point(0).y+r, point(0).x, point(0).y+r+vert_line_sz);
+        fl_line(point(0).x+w, point(0).y+r, point(0).x+w, point(0).y+r+vert_line_sz);
+        
+        //round corners
+        fl_pie(point(0).x, point(0).y, 2*r, 2*r, 90, 180);  
+        fl_pie(point(0).x+horz_line_sz, point(0).y, 2*r, 2*r, 0, 90);
+        fl_pie(point(0).x, point(0).y+vert_line_sz, 2*r, 2*r, 180, 270);
+        fl_pie(point(0).x+horz_line_sz, point(0).y+vert_line_sz, 2*r, 2*r, 270, 360);
+
+		fl_color(color().as_int());	// reset color
+	}
+
+	if (color().visibility()) {	// edge on top of fill
+		fl_color(color().as_int());
+
+        //horizontal lines
+        fl_line(point(0).x+r, point(0).y, point(0).x+r+horz_line_sz, point(0).y); 
+        fl_line(point(0).x+r, point(0).y+h, point(0).x+r+horz_line_sz, point(0).y+h); 
+
+        //vertical lines
+        fl_line(point(0).x, point(0).y+r, point(0).x, point(0).y+r+vert_line_sz);
+        fl_line(point(0).x+w, point(0).y+r, point(0).x+w, point(0).y+r+vert_line_sz);
+
+        //round corners
+        fl_arc(point(0).x, point(0).y, 2*r, 2*r, 90, 180);  
+        fl_arc(point(0).x+horz_line_sz, point(0).y, 2*r, 2*r, 0, 90);
+        fl_arc(point(0).x, point(0).y+vert_line_sz, 2*r, 2*r, 180, 270);
+        fl_arc(point(0).x+horz_line_sz, point(0).y+vert_line_sz, 2*r, 2*r, 270, 360);
+	}
+}
+
+
+} // namespace Graph_lib
