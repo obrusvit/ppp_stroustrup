@@ -1,5 +1,6 @@
 #include "std_lib_facilities.h"
 #include "Simple_window.h"
+#include "Window.h"
 #include "Graph.h"
 
 int main(){
