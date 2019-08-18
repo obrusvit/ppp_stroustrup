@@ -4,18 +4,6 @@
 
 using namespace std;
 
-char* strdup(const char* s){
-    if(s == 0) return 0;
-    int c = 0;
-    while(s[c]) c++;
-    char* ret = new char[c];
-    for(int i = 0; i < c; ++i){
-        ret[i] = s[i];
-    }
-    ret[c+1] = '\0';
-    return ret;
-}
-
 char* findx(const char* s, const char* x){
     if(s==0 || x==0) return nullptr;
     for(int i = 0; s[i]; ++i){

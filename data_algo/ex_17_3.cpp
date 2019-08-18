@@ -1,13 +1,23 @@
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 using namespace std;
 
 void to_lower(char* s){
-    while(*s){
-        if(*s >= 'A' && *s <= 'Z') *s += 32;
-        s++;
+    for( ; *s; s++){
+        if(*s >= 'A' && *s <= 'Z') *s += 'a'-'A';
     }
+}
+
+void test(const string& ss){
+
+    string s = ss;
+    cout << s << "\n";
+    char* p = &s[0];
+    to_lower(p);
+    cout << p << "\n";
+
 }
 
 int main(){
@@ -22,6 +32,11 @@ int main(){
         to_lower(cs1);
         cout <<  cs << "\n";
         cout <<  cs1 << "\n";
+
+        string s;
+        for( ; cin >> s && s!="quit";){
+            test(s);
+        }
         return 0;
     }
     catch(exception& e){
