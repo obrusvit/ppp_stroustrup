@@ -14,6 +14,9 @@
 //#include "Vector_simple.hpp"
 #include "Vector_with_handle.hpp"
 
+// test also own implementation of allocator
+#include "Allocator.hpp"
+
 using namespace std;
 
 //------------------------------------------------------------------------------
@@ -61,9 +64,18 @@ vector<double>* make_vector(){
     p->push_back(3.2);
     return p.release();
 }
+Vector<double, My_allocator<double>>* make_Vector_with_My_allocator(){
+    std::unique_ptr<Vector<double, My_allocator<double>>> p {new Vector<double, My_allocator<double>>};
+    p->push_back(4.1);
+    p->push_back(3.2);
+    return p.release();
 
+}
 
 //------------------------------------------------------------------------------
+
+class Placeholder_obj{
+};
 
 class No_default{
     char val;
@@ -239,6 +251,91 @@ TEST_CASE("Testing my implementation of Vector<T>") {
 
     SECTION("Testing make_Vector"){
         Vector<double>* p = make_Vector();
+        delete p;
+    }
+}
+
+//------------------------------------------------------------------------------
+
+TEST_CASE("Testing My_allocator with my implementation of Vector<T>") {
+    SECTION("Initialization"){
+        Vector<double, My_allocator<double>> vec1;
+        Vector<double, My_allocator<double>> vec2(3);
+        Vector<double, My_allocator<double>> vec3{1.1, 1.2, 1.3, 1.4};
+
+        REQUIRE(vec1.size() == 0);
+        REQUIRE(vec2.size() == 3);
+        REQUIRE(vec2.at(1) == 0.0);
+        REQUIRE(vec2[1] == 0.0);
+        REQUIRE(vec3.size() == 4);
+    }
+
+    SECTION("Copy constuction and copy assignment"){
+        Vector<double, My_allocator<double>> vec1{1.1, 1.2, 1.3, 1.4};
+        Vector<double, My_allocator<double>> vec2 = vec1;
+        REQUIRE(vec1.size() == vec2.size());
+        REQUIRE(vec1.at(0) == vec2.at(0));
+        REQUIRE(vec1.at(1) == vec2.at(1));
+        REQUIRE(vec1.at(2) == vec2.at(2));
+
+        Vector<double, My_allocator<double>> vec3{3.1, 3.2, 3.3, 3.4, 3.5};
+        vec3 = vec1;
+        REQUIRE(vec3.size() == vec1.size());
+        REQUIRE(vec3.at(0) == vec1.at(0));
+        REQUIRE(vec3.at(1) == vec1.at(1));
+        REQUIRE(vec3.at(2) == vec1.at(2));
+    }
+
+    SECTION("Access operator[], at()"){
+        Vector<double, My_allocator<double>> vec1{1.1, 1.2, 1.3, 1.4};
+        REQUIRE(vec1[0] == 1.1);
+        REQUIRE(vec1.at(0) == 1.1);
+        vec1[0] = 8.1;
+        REQUIRE(vec1[0] == 8.1);
+        REQUIRE(vec1.at(0) == 8.1);
+
+        REQUIRE(vec1.at(vec1.size()-1) == 1.4);
+        REQUIRE_THROWS_AS(vec1.at(vec1.size()), std::out_of_range);
+    }
+    SECTION("Growing vector - push_back(), capacity() and resize()"){
+        Vector<double, My_allocator<double>> vec1{1.1, 1.2, 1.3, 1.4};
+        REQUIRE(vec1.size() == 4);
+        REQUIRE(vec1.capacity() == 4);
+        vec1.push_back(1.5);
+        REQUIRE(vec1.at(0) == 1.1);
+        REQUIRE(vec1.at(1) == 1.2);
+        REQUIRE(vec1.size() == 5);
+        REQUIRE(vec1.capacity() == 8);
+        vec1.push_back(1.6);
+        vec1.push_back(1.7);
+        vec1.push_back(1.8);
+        REQUIRE(vec1.at(0) == 1.1);
+        REQUIRE(vec1.at(1) == 1.2);
+        REQUIRE(vec1.size() == 8);
+        REQUIRE(vec1.capacity() == 8);
+        vec1.push_back(1.9);
+        REQUIRE(vec1.at(0) == 1.1);
+        REQUIRE(vec1.at(1) == 1.2);
+        REQUIRE(vec1.size() == 9);
+        REQUIRE(vec1.capacity() == 16);
+        vec1.resize(20);
+        REQUIRE(vec1.size() == 20);
+        REQUIRE(vec1.capacity() == 20);
+    }
+    SECTION("Testing Vector with custom class with no default constructor"){
+        No_default n1('a');
+        No_default n2('b');
+        Vector<No_default, My_allocator<No_default>> vec1;
+        REQUIRE(vec1.size() == 0);
+        vec1.push_back(n1);
+        vec1.push_back(n2);
+
+        //Vector<No_default> vec2(5); //error
+        Vector<No_default, My_allocator<No_default>> vec2(5, 'd');
+    }
+
+    SECTION("Testing make_Vector_with_My_allocator"){
+        Vector<double, My_allocator<double>>* p = make_Vector_with_My_allocator();
         delete p;
     }
 }
