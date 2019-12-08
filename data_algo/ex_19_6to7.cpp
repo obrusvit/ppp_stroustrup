@@ -1,5 +1,6 @@
 /*
  * Implement Number<T> template class
+ * and test it on template functions from ex 1,2
  */
 #include <iostream>
 #include <stdexcept>
@@ -7,6 +8,7 @@
 #include <sstream>
 
 #include "catch.hpp"
+#include "ex_19_1to2.hpp" //f,g
 
 using namespace std;
 
@@ -146,15 +148,15 @@ TEST_CASE("Testing exercise 6 of chapter 19") {
         os << i2;
         REQUIRE(os.str() == "{Number: 10}{Number: 5}");
     }
-    //SECTION("Operator >>"){
-    //    Int i1;
-    //    stringstream ss{"4"};
-    //    ss >> i1;
-    //    ostringstream os;
-    //    os << i1;
-    //    REQUIRE(os.str() == "{Int: 4}");
+    SECTION("Operator >>"){
+        Number<int> i1;
+        stringstream ss{"4"};
+        ss >> i1;
+        ostringstream os;
+        os << i1;
+        REQUIRE(os.str() == "{Number: 4}");
 
-    //}
+    }
     //SECTION("Operator >> fails"){
     //    cout << "Enter int to init your Int\n";
     //    Int i2;
@@ -167,6 +169,18 @@ TEST_CASE("Testing exercise 6 of chapter 19") {
 
     //    cout << i2 << "\n";
     //}
+}
+
+//------------------------------------------------------------------------------
+
+TEST_CASE("Testing exercise 7 of chapter 19"){
+    SECTION("Init some vector with my Number<N> template class"){
+        vector<Number<int>> v1{1, 2, 3}; 
+        vector<Number<int>> v2{4, 5, 6}; 
+        auto res_g1 = g(v1, v2);
+        REQUIRE(res_g1 == 32);
+
+    }
 }
 
 //------------------------------------------------------------------------------
