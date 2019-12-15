@@ -22,7 +22,7 @@ T* My_allocator<T>::allocate(int n){
     // allocate space for n objects of type T
     T* ret = static_cast<T*>(malloc(n* sizeof(T)));
     if(ret == 0) 
-        throw std::runtime_error("My_allocator::allocate could not allocate memory");
+        throw std::bad_alloc();
     return ret;
 }
 
