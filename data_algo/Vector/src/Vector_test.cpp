@@ -12,7 +12,8 @@
 
 //#include "Vector_simplest.hpp"
 //#include "Vector_simple.hpp"
-#include "Vector_with_handle.hpp"
+//#include "Vector_with_handle.hpp"
+#include "Vector_with_handle_std_complient.hpp"
 
 // test also own implementation of allocator
 #include "Allocator.hpp"
@@ -252,6 +253,58 @@ TEST_CASE("Testing my implementation of Vector<T>") {
     SECTION("Testing make_Vector"){
         Vector<double>* p = make_Vector();
         delete p;
+    }
+
+    SECTION("Testing Vector, std compliancy - with range access in algorithm "){
+        Vector<double> v1(10);
+        std::iota(v1.begin(), v1.end(), 7);
+        REQUIRE(v1.size() == 10);
+        REQUIRE(v1.at(0) == 7);
+        REQUIRE(v1.at(1) == 8);
+        REQUIRE(v1.at(2) == 9);
+        REQUIRE(v1.at(3) == 10);
+        REQUIRE(v1.at(4) == 11);
+        REQUIRE(v1.at(5) == 12);
+        REQUIRE(v1.at(6) == 13);
+        REQUIRE(v1.at(7) == 14);
+        REQUIRE(v1.at(8) == 15);
+        REQUIRE(v1.at(9) == 16);
+        REQUIRE_THROWS_AS(v1.at(10) == 17, std::out_of_range);
+    }
+    SECTION("Testing Vector, std compliancy - erase"){
+        Vector<double> v1(10);
+        std::iota(v1.begin(), v1.end(), 7);
+        REQUIRE(*(v1.end()-1) == 16); //last element is now 16
+        v1.erase(v1.end()-1);
+        REQUIRE(v1.size() == 9);
+        REQUIRE(*(v1.end()-1) == 15); //last element is now 15
+    }
+
+    SECTION("Testing Vector, std compliancy - insert"){
+        Vector<double> v1(10);
+        std::iota(v1.begin(), v1.end(), 7);
+        v1.insert(v1.begin(), 100);
+        REQUIRE(v1.size() == 11);
+        REQUIRE(v1.at(0) == 100);
+        REQUIRE(v1.at(1) == 7);
+        REQUIRE(v1.at(2) == 8);
+        REQUIRE(v1.at(v1.size()-1) == 16);
+
+        v1.insert(v1.begin(), 200);
+        REQUIRE(v1.size() == 12);
+        REQUIRE(v1.at(0) == 200);
+        REQUIRE(v1.at(1) == 100);
+        REQUIRE(v1.at(2) == 7);
+        REQUIRE(v1.at(3) == 8);
+        REQUIRE(v1.at(v1.size()-1) == 16);
+
+        v1.insert(v1.begin()+3, 300);
+        REQUIRE(v1.size() == 13);
+        REQUIRE(v1.at(0) == 200);
+        REQUIRE(v1.at(1) == 100);
+        REQUIRE(v1.at(2) == 7);
+        REQUIRE(v1.at(3) == 300);
+        REQUIRE(v1.at(v1.size()-1) == 16);
     }
 }
 

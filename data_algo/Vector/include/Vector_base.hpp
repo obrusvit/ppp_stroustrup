@@ -1,6 +1,6 @@
 /**
  * Resource handle for Vector memory.
- * Handles data of type T. Takes care of correct m_size and _capacity.
+ * Handles data of type T. Takes care of correct m_size and m_space.
  * The purpose is to make my Vector RAII proof.
  */
 
@@ -12,14 +12,20 @@
 #include<iostream>
 
 template<typename T, typename A = std::allocator<T>>
+    // requires Element<T>() && Allocator<A>()
 struct Vector_base{
-    T* m_elem;
+    using size_type = unsigned int;
+    using value_type = T;
+    using iterator = T*;
+    using const_iterator = const T*;
+
+    iterator m_elem;
     A m_alloc;
-    int m_size {0};
-    int m_space {0};
+    size_type m_size {0};
+    size_type m_space {0};
 
 
-    Vector_base(const A& a, int n)
+    Vector_base(const A& a, size_type n)
         : m_alloc{a}, m_elem{m_alloc.allocate(n)}, m_size{n}, m_space{n}
     {
 
