@@ -19,13 +19,11 @@
 template <typename T, typename A = std::allocator<T> >
     // requires Element<T>() && Allocator<A>()
 class Vector : private Vector_base<T,A>{
-
-    using size_type = unsigned int;
-    using value_type = T;
-    using iterator = T*;
-    using const_iterator = const T*;
-
     public:
+        using size_type = unsigned int;
+        using value_type = T;
+        using iterator = T*;
+        using const_iterator = const T*;
 
         /* constructors */
         Vector(A a = A())
@@ -96,22 +94,22 @@ class Vector : private Vector_base<T,A>{
             return this->m_size;
         }
 
-        T& operator[](int idx){
+        value_type& operator[](int idx){
             return this->m_elem[idx];
         }
 
-        const T& operator[](int idx) const {
+        const value_type& operator[](int idx) const {
             return this->m_elem[idx]; 
         }
 
-        T& at(int idx){
+        value_type& at(int idx){
             if(idx < 0 || idx >= this->m_size){
                throw std::out_of_range("bad index"); 
             }
             return operator[](idx);
         }
         
-        const T& at(int idx) const {
+        const value_type& at(int idx) const {
             if(idx < 0 || idx >= this->m_size){
                throw std::out_of_range("bad index"); 
             }
@@ -175,12 +173,15 @@ class Vector : private Vector_base<T,A>{
             if(size() == capacity())
                 reserve(size() == 0 ? 8 : size()*2);
 
-            //FIXME
-            this->m_alloc.construct(this->m_elem+this->m_size, *(end()-1));
+            // put the last elem to the very end
+            // seems not really necessary
+            //this->m_alloc.construct(this->m_elem+this->m_size, *(end()-1));
 
             ++this->m_size;
             iterator pp = begin() + index; //where to put val
-            for(auto pos = end()-1; pos!=pp; --pos)
+            //for(auto pos = end()-1; pos!=pp; --pos)
+            //    *pos = *(pos-1); //copy one pos to the right
+            for(auto pos = end(); pos!=pp; --pos)
                 *pos = *(pos-1); //copy one pos to the right
             *(begin()+index) = val;
             return pp;

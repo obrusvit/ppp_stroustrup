@@ -278,6 +278,15 @@ TEST_CASE("Testing my implementation of Vector<T>") {
         v1.erase(v1.end()-1);
         REQUIRE(v1.size() == 9);
         REQUIRE(*(v1.end()-1) == 15); //last element is now 15
+
+        Vector<double> v2(10);
+        std::iota(v2.begin(), v2.end(), 7);
+        v2.erase(v2.begin());
+        v2.erase(v2.begin());
+        REQUIRE(v2.size() == 8);
+        REQUIRE(v2.at(0) == 9);
+        REQUIRE(v2.at(1) == 10);
+        REQUIRE(v2.at(v2.size()-1) == 16);
     }
 
     SECTION("Testing Vector, std compliancy - insert"){
@@ -305,6 +314,22 @@ TEST_CASE("Testing my implementation of Vector<T>") {
         REQUIRE(v1.at(2) == 7);
         REQUIRE(v1.at(3) == 300);
         REQUIRE(v1.at(v1.size()-1) == 16);
+    }
+    // 13.45
+    SECTION("Testing Vector, std compliancy - insert and erase on one Vector"){
+        Vector<double> v1(10);
+        std::iota(v1.begin(), v1.end(), 7);
+        v1.insert(v1.begin(), 100);
+        REQUIRE(v1.at(0) == 100);
+        REQUIRE(v1.at(1) == 7);
+        REQUIRE(v1.at(v1.size()-1) == 16);
+        REQUIRE(v1.size() == 11);
+        v1.erase(v1.begin());
+        REQUIRE(v1.size() == 10);
+        REQUIRE(v1.at(0) == 7);
+        REQUIRE(v1.at(1) == 8);
+        REQUIRE(v1.at(v1.size()-1) == 16);
+        
     }
 }
 
