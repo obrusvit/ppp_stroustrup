@@ -5,9 +5,9 @@
 #include <stdexcept>
 #include <vector>
 #include <chrono>
+#include <fstream>
 
 #include "catch.hpp"
-
 #include "Vector_double.hpp"
 
 //#include "Vector_simplest.hpp"
@@ -77,6 +77,10 @@ Vector<double, My_allocator<double>>* make_Vector_with_My_allocator(){
 
 class Placeholder_obj{
 };
+std::ostream& operator<<(std::ostream& os, const Placeholder_obj& obj){
+    os << "Placeholder_obj (" << &obj << ") in os, wow";
+    return os;
+}
 
 class No_default{
     char val;
@@ -315,7 +319,6 @@ TEST_CASE("Testing my implementation of Vector<T>") {
         REQUIRE(v1.at(3) == 300);
         REQUIRE(v1.at(v1.size()-1) == 16);
     }
-    // 13.45
     SECTION("Testing Vector, std compliancy - insert and erase on one Vector"){
         Vector<double> v1(10);
         std::iota(v1.begin(), v1.end(), 7);
@@ -331,6 +334,38 @@ TEST_CASE("Testing my implementation of Vector<T>") {
         REQUIRE(v1.at(v1.size()-1) == 16);
         
     }
+    SECTION("Testing Vector, std compliancy - range for each loop"){
+        Vector<double> v1(10);
+        std::iota(v1.begin(), v1.end(), 7);
+        for(const auto& el : v1){
+            auto tmp = el + 1;
+        }
+    }
+    SECTION("Testing Vector - ostream operator"){
+        Vector<double> v1(10);
+        std::iota(v1.begin(), v1.end(), 7);
+        Vector<Placeholder_obj> v2(10);
+
+        std::ofstream ofs{"testFiles/ostreamVec.txt"};
+        if(ofs){
+            ofs << v1;
+            ofs << v2;
+        }
+    }
+
+    SECTION("Testing Vector - istream operator"){
+        Vector<double> v1;
+        std::ifstream ifs{"testFiles/istreamVecDouble.txt"};
+        if(ifs){
+            ifs >> v1;
+            ifs >> v1;
+        }
+
+        //Vector<Placeholder_obj> v2;  //Error: Placeholder_obj has no operator>>
+        //std::cin >> v2;
+        //std::cout << v2;
+    }
+
 }
 
 //------------------------------------------------------------------------------

@@ -89,6 +89,9 @@ class Vector : private Vector_base<T,A>{
 
         }
 
+        /* operators */
+        //friend std::ostream& operator<<(std::ostream& os, const Vector<T>& vec);
+
         /* access */
         size_type size() const{
             return this->m_size;
@@ -185,8 +188,6 @@ class Vector : private Vector_base<T,A>{
                 *pos = *(pos-1); //copy one pos to the right
             *(begin()+index) = val;
             return pp;
-
-            
         }
 
         iterator erase(iterator p){
@@ -208,5 +209,26 @@ class Vector : private Vector_base<T,A>{
         }
 };
 
+/* non-member operators */
+template <typename T, typename A = std::allocator<T> >
+std::ostream& operator<<(std::ostream& os, const Vector<T, A>& vec){
+    os << "Vector: {";
+    auto last = vec.size()-1;
+    for(auto i = 0; i < vec.size(); ++i){
+        os << vec[i];    
+        if(i != last)
+            os << ", ";
+    }
+    os << "}\n";
+    return os;
+}
+
+template <typename T, typename A = std::allocator<T> >
+std::istream& operator>>(std::istream& is, Vector<T, A>& vec){
+    T to_add;
+    is >> to_add;
+    vec.push_back(to_add);
+    return is;
+}
 
 #endif
