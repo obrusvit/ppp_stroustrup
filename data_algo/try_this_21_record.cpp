@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <map>
 
 using namespace std;
 
@@ -49,7 +50,8 @@ void print_records_ids(const vector<Record>& vec){
 void print_records(const vector<Record>& vec){
     cout << "{\n";
     for(vector<Record>::size_type i = 0; i < vec.size(); ++i){
-        cout << "\t{" << vec[i].getID() << ", " << vec[i].getName() << ", " << vec[i].getPrice() << "}\n";
+        cout << "\t{" << vec[i].getID() << ", " << vec[i].getName() << ", "
+             << vec[i].getPrice() << "}\n";
     }
     cout << "}\n";
 }
@@ -57,6 +59,7 @@ void print_records(const vector<Record>& vec){
 //------------------------------------------------------------------------------
 
 int compare_records(const Record& r1, const Record& r2){
+    map<string, double> m;
     return r1.getName() < r2.getName();
 }
 
