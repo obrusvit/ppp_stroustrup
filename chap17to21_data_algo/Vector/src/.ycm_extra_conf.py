@@ -48,7 +48,7 @@ flags = [
 'c++',
 '-Iinclude',
 '-I../include',
-'-std=c++14'
+'-std=c++17'
 ]
 
 def Settings( **kwargs ):
