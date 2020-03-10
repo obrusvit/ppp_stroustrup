@@ -4,9 +4,11 @@
 #include <vector>
 using namespace std;
 
-float test_float(int parts){
-    float a = 1.0/parts;
-    float sum = 0.0;
+template<typename Num_type>
+    // requires Real_number or something...just not int
+Num_type test_num_type_precistion(int parts){
+    Num_type a = 1.0/parts;
+    Num_type sum = 0.0;
     for(int i = 0; i < parts; ++i){
         sum += a; 
     }
@@ -16,9 +18,15 @@ float test_float(int parts){
 
 int main(){
     try {
-        cout << setprecision(15) << test_float(333) << "\n";
-        cout << setprecision(15) << test_float(10) << "\n";
-        cout << setprecision(15) << test_float(2) << "\n";
+        cout << "Testing float: \n";
+        cout << setprecision(15) << test_num_type_precistion<float>(333) << "\n";
+        cout << setprecision(15) << test_num_type_precistion<float>(10) << "\n";
+        cout << setprecision(15) << test_num_type_precistion<float>(2) << "\n";
+
+        cout << "Testing double: \n";
+        cout << setprecision(15) << test_num_type_precistion<double>(333) << "\n";
+        cout << setprecision(15) << test_num_type_precistion<double>(10) << "\n";
+        cout << setprecision(15) << test_num_type_precistion<double>(2) << "\n";
 
         return 0;
     }
